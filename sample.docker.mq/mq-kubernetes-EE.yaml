@@ -8,7 +8,7 @@ spec:
   ports:
     - port: 9443
       name: mqfull-console
-      nodePort: 30443
+      nodePort: 33443
     - port: 1414
       name: mq-internal
   selector:
@@ -23,7 +23,6 @@ metadata:
   labels:
     app: mqfull
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: mqfull
@@ -36,7 +35,7 @@ spec:
     spec:
       containers:
         - name: mqfull
-          image: sampledockermq_mqfull:1.0
+          image: {dtr-registry-address}/admin/test-mq:1.0
           ports:
             - containerPort: 9443
               name: mq-console
@@ -61,11 +60,11 @@ spec:
     - port: 9080
       name: sender-comms
       protocol: TCP
-      nodePort: 31080
+      nodePort: 34090
     - port: 9443
       name: sender-console
       protocol: TCP
-      nodePort: 31443
+      nodePort: 34443
   selector:
     app: sender
     tier: websphere
@@ -78,7 +77,6 @@ metadata:
   labels:
     app: sender
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: sender
@@ -91,7 +89,7 @@ spec:
     spec:
       containers:
         - name: sender-image
-          image: sampledockermq_sender:1.0
+          image: {dtr-registry-address}/admin/test-sender:1.0
           ports:
             - containerPort: 9080
             - containerPort: 9443
@@ -107,11 +105,11 @@ spec:
     - port: 9080
       name: receiver-comms
       protocol: TCP
-      nodePort: 31081
+      nodePort: 34081
     - port: 9443
       name: receiver-console
       protocol: TCP
-      nodePort: 31444
+      nodePort: 34444
   selector:
     app: receiver
     tier: websphere
@@ -124,7 +122,6 @@ metadata:
   labels:
     app: receiver
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: receiver
@@ -137,7 +134,7 @@ spec:
     spec:
       containers:
         - name: receiver-image
-          image: sampledockermq_receiver:1.0
+          image: {dtr-registry-address}/admin/test-receiver:1.0
           ports:
             - containerPort: 9080
             - containerPort: 9443

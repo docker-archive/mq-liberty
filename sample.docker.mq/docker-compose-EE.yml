@@ -2,7 +2,7 @@
  services:
 
    mqfull:
-     image: sampledockermq_mqfull:1.0
+     image: {dtr-registry-address}/admin/test-mq:1.0
      environment:
        LICENSE: accept
        MQ_QMGR_NAME: QM1
@@ -11,14 +11,14 @@
        MQSNOAUT: "yes"
      ports:
        - "1414:1414"
-       - "30443:9443"
+       - "33443:9443"
    sender:
-     image: sampledockermq_sender:1.0
+     image: {dtr-registry-address}/admin/test-sender:1.0
      ports:
-       - "31080:9080"
-       - "31443:9443"
+       - "34090:9080"
+       - "34443:9443"
    receiver:
-     image: sampledockermq_receiver:1.0
+     image: {dtr-registry-address}/admin/test-receiver:1.0
      ports:
-       - "31081:9080"
-       - "31444:9443"
+       - "34081:9080"
+       - "34444:9443"

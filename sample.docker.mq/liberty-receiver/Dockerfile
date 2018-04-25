@@ -1,6 +1,6 @@
 FROM store/ibmcorp/websphere-liberty:webProfile7
 
-MAINTAINER Jamie Coleman <jlcoleman@uk.ibm.com>
+MAINTAINER Dan Powers <dan.powers@docker.com>
 
 COPY server.xml /opt/ibm/wlp/usr/servers/defaultServer/
 COPY 9.0.5.0-IBM-MQ-Java-InstallRA.jar /
