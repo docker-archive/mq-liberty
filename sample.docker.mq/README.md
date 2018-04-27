@@ -43,7 +43,7 @@ This deployment shows:
 - [MQ Resource Adaptor](https://www-945.ibm.com/support/fixcentral/)
 - [Create Docker Store Login](https://store.docker.com/signup?next=%2F)
 
-## Installation and Configuration (Docker for Mac)
+## Installation and Configuration (Docker for Mac) ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo") ![Swarm Logo](./images/swarm.png "Swarm Logo")
 
 1. Install the `git` utility if not already installed
 2. In a terminal window, navigate to the folder you would like to place the repository (or create a new one), then run the command:
@@ -57,20 +57,19 @@ This deployment shows:
 5. Put the resource adapter JAR file that you downloaded into both the `liberty-sender` and `liberty-receiver` application folders found in `./sample.docker.mq`
 6. Edit the `Dockerfile` in both `liberty-sender` and `liberty-receiver` and ensure that the COPY commands for the resource adapter is up-to-date with the current resource adapter’s version (e.g. change `9.0.5.0` in two places if necessary).
 
-7. Go to Prerequistes section to create a `docker login` if you haven't already.
-
+7. Go to Prerequistes section to create a `docker login id` if you don't already have one. Execute the following command and provide your Docker credentials:
     ```
     $ docker login
     ```
 
-8. Return to the `sample.docker.mq` directory.  This script will build the application using `maven` and the images using `docker build`:
+8. Return to the `sample.docker.mq` directory.  Execute this script which compiles and builds the application:
     ```bash
     $ chmod 755 build
     $ ./build
     ```
-This will use maven to build the WAR files for both of the applications in the sender and receiver directories and makes sure they are put in the correct locations and will also build the images for mq, sender, and receiver.
+This script uses maven to build the WAR files for both of the applications in the sender and receiver directories and makes sure they are copied the correct locations. It also builds the images for mq, sender, and receiver parts of the application:
 
-9. Verify the image creation.
+9. Verify the image creation using these Kubernetes commands:
 ```docker
 $ docker images | grep sampledockermq
 sampledockermq_receiver                                  latest              a4a12b72eebf        17 minutes ago      451MB
@@ -78,17 +77,17 @@ sampledockermq_sender                                    latest              2d4
 sampledockermq_mqfull                                    latest              ad1b71dbba72        18 minutes ago      793MB
 ```
 
-## Verifying the Deployment for Swarm on Docker for Mac
+## Verifying the Deployment for Swarm on Docker for Mac ![Swarm Logo](./images/swarm.png "Swarm Logo")
 
-(_Skip to the next section if using [Kubernetes on Docker for Mac](#Verifying-the-Deployment-for-Kubernetes-on-Docker-for-Mac))_
+_(If using Kubernetes, proceed to "Verifying the Deployment for Kubernetes on Docker for Mac")_
 
-To deploy on Docker for Mac using the Swarm orchestrator, simply execute:
+To deploy on Docker for Mac using the Swarm orchestrator, execute:
 
    ```docker
    $ docker-compose up
    ```
 
-This will bring up three containers: `mqfull, liberty-server, liberty-receiver`.  A `docker ps` will look something like this:
+This brings up three containers: `mqfull, liberty-server, liberty-receiver`.  A `docker ps` command looks something like this:
 ```docker
 $ docker ps
 CONTAINER ID        IMAGE                     COMMAND                  CREATED             STATUS              PORTS                                              NAMES
@@ -97,20 +96,20 @@ b354b1cb9ab2        sampledockermq_sender     "/opt/ibm/docker/doc…"   2 minut
 9cf7f1e9c5bc        sampledockermq_receiver   "/opt/ibm/docker/doc…"   2 minutes ago       Up 2 minutes        0.0.0.0:10081->9080/tcp, 0.0.0.0:10444->9443/tcp   sampledockermq_receiver_1
 ```
 
-_(To continue with testing Swarm deployment, skip to [Verifying the Application](#verifying-the-application-on-docker-for-mac))_
+_(If using Swarm, proceed to "Verifying the Application on Docker for Mac")_
 
-## Verifying the Deployment for Kubernetes on Docker for Mac
+## Verifying the Deployment for Kubernetes on Docker for Mac ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo")
 
-If Kubernetes is not already enabled, access the top menu bar of your desktop and click on `Preferences`.  Click on `Kubernetes` and choose the `Enable Kubernetes` check box.  Click on `Apply`  Docker for Mac will now restart with Kubernetes enabled.
+If Kubernetes is not already enabled, access the top menu bar of your desktop and click on `Preferences`.  Click on `Kubernetes` and choose the `Enable Kubernetes` check box.  Click on `Apply`  Docker for Mac now restarts with Kubernetes enabled.
 
 ![D4M Menu](./images/D4M-menu.png "D4M Menu") `     ` ![D4M k8s Menu](./images/D4Mk8s-menu.png "D4M k8s Menu")
 
-To deploy with the Kubernetes orchestrator, simply execute:
+To deploy with the Kubernetes orchestrator, execute:
 
    ```kubernetes
    $ kubectl create -f mq-kubernetes.yaml
    ```
-This will start three services and three deployments named `mqfull, sender, receiver`. `kubectl get` command:
+This starts three services and three deployments named `mqfull, sender, receiver`. Verify the Kubernetes deployment using the `kubectl get` command.  The output is similar to this:
 
 ```bash
 $ kubectl get pods
@@ -133,9 +132,9 @@ receiver     NodePort    10.101.142.16   <none>        9080:31081/TCP,9443:31444
 sender       NodePort    10.108.30.76    <none>        9080:31080/TCP,9443:31443/TCP   25m
 ```
 
-## Verifying the Application on Docker for Mac
+## Verifying the Application on Docker for Mac ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo") ![Swarm Logo](./images/swarm.png "Swarm Logo")  
 
-You can now access the application, the MQ Console, and the two Liberty servers:
+Access the application, the MQ Console, and the two Liberty servers:
 
 - Application:  http://localhost:31080/sender/
 
@@ -164,8 +163,8 @@ You can now access the application, the MQ Console, and the two Liberty servers:
 
     ![Port 31443 Sender Console](./images/Liberty-Console-Sender-Port-31443.png "Port 31443 Sender Console") 
     
-## Stopping the Application using Swarm on Docker for Mac
-_(Skip to next section if testing [Kubernetes on Docker for Mac](#Stopping-the-Application-using-Kubernetes-on-Docker-for-Mac))_
+## Stopping the Application using Swarm on Docker for Mac ![Swarm Logo](./images/swarm.png "Swarm Logo")
+_(If using Kubernetes, proceed to "Stopping the Application using Kubernetes on Docker for Mac")_
 
 To stop the application, execute:
 ```docker
@@ -175,9 +174,9 @@ Removing sampledockermq_sender_1   ... done
 Removing sampledockermq_mqfull_1   ... done
 Removing sampledockermq_receiver_1 ... done
 ```
-_(Skip to Configuration and Deployment on [Docker Enterprise Edition](#Configuration-and-Deployment-on-Docker-Enterprise-Edition))_
+_(Proceed to "Configuration and Deployment on Docker Enterprise Edition")_
 
-## Stopping the Application using Kubernetes on Docker for Mac
+## Stopping the Application using Kubernetes on Docker for Mac ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo")
 
 To stop the application, execute:
 ```docker
@@ -191,7 +190,7 @@ deployment "mqfull" deleted
 deployment "sender" deleted
 deployment "receiver" deleted
 ```
-##  Configuration and Deployment on Docker Enterprise Edition
+##  Configuration and Deployment on Docker Enterprise Edition ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo") ![Swarm Logo](./images/swarm.png "Swarm Logo")  
 
 To deploy the IBM MQ & WebSphere-Liberty Solution Brief on Docker Enterprise Edition 2.0, begin with the provisioning of an appropriate number of nodes for site-specific performance and high availability. As an example for this Solution Guide, a four instance deployment was provisioned consisting of one instance for UCP Management and three instances to run each of the three worker containers: MQ, Sender, and Receiver.  UCP manages both Kubernetes and Swarm orchestration. 
 
@@ -203,15 +202,17 @@ Docker Trusted Registry (DTR) is also installed on the instance with one of the 
 
 ### Move the previously tested MQ and Liberty images to Docker Enterprise Edition running on a cloud service provider.
 
-Since the original MQ and Liberty images have been extended during the build process, these extended images must be tagged and pushed into the cloud service provider environment.  This can be done by pushing the local images to DTR and then altering the `docker-compose.yml` so that it points to these images. (For testing purposes, you can use a public repository on Docker Hub to push the images instead of using DTR)
+Since the original MQ and Liberty images have been extended during the build process, these extended images must be tagged and pushed into the cloud service provider environment. This can be done by pushing the local images to DTR and then altering the `docker-compose.yml` so that it points to these images. (For testing purposes, a public repository on Docker Hub can be used to push the images instead of using the DTR product)
 
 1. Login to the DTR Mangement Console (at https://{dtr-registry-address}) as "admin" and click on the `New repository` button towards the upper right portion of the window.
-2. In the field "REPOSITORY NAME", enter `test-mq` and then click on `Create`.
+2. In the New Repository `name` field, enter `test-mq` and then click on `Create`.
 3. Create two more repositories named `test-sender` and `test-receiver`.  The new repositories should look like this:
 
     ![DTR Screen1](./images/DTRScreen1.png "DTR Screen 1")
 
-4. Logout of DTR.  From a new terminal window on Docker for Mac/Linux, execute:
+4. Logout of the UI for DTR.  
+
+5. From a new terminal window on Docker for Mac/Linux, execute:
 
     ```bash
     $ docker logout
@@ -219,9 +220,9 @@ Since the original MQ and Liberty images have been extended during the build pro
     $ docker login {dtr-registry-address}
     ```
    
-5. When prompted, enter "admin" as the user name and then the appropriate password.
+6. When prompted, enter "admin" as the user name and then the appropriate password.
 
-6. Prepare the images created in the previous steps to the Docker Trusted Registry.
+7. Prepare the images created in the previous steps to the Docker Trusted Registry.
 
     ```docker
     $ docker tag sampledockermq_mqfull:1.0 {dtr-registry-address}/admin/test-mq:1.0
@@ -229,7 +230,7 @@ Since the original MQ and Liberty images have been extended during the build pro
     $ docker tag sampledockermq_receiver:1.0 {dtr-registry-address}/admin/test-receiver:1.0
     ```
 
-7. Push images to the Docker Trusted Registry
+8. Push images to the Docker Trusted Registry
 
     ```docker
     $ docker push {dtr-registry-address}/admin/test-mq:1.0
@@ -240,9 +241,9 @@ Since the original MQ and Liberty images have been extended during the build pro
     ...
     ```
 
-## Configuration, Deployment, and Verification on Docker Enterprise Edition using Swarm
+## Deployment and Verification on Docker Enterprise Edition using Swarm ![Swarm Logo](./images/swarm.png "Swarm Logo")
 
-_(If using Kubernetes, proceed to [Configuration and Deployment on Docker Enterprise Edition using Kubernetes](#Configuration-and-Deployment-on-Docker-Enterprise-Edition-using-Kubernetes))_
+_(If using Kubernetes, proceed to "Configuration and Deployment on Docker Enterprise Edition using Kubernetes")_
 
 1. In a browser, access the URL for the UCP management node and login as "admin".
 
@@ -266,19 +267,19 @@ _(If using Kubernetes, proceed to [Configuration and Deployment on Docker Enterp
 
    ![UCP Deploy](./images/UCPDeployVerify.png "UCP Deploy")
 
-7. To verify correct functioning, connect to http://{ucp-ip-address}:34080/sender/ .  After each screen refresh, the sender will post a message to receiver.  Receiver will answer with a message back.  Other console applications are available as described in the previous section [Verifying the Application on Docker for Mac](#verifying-the-application-on-docker-for-mac)
+7. To verify correct functioning, connect to http://{ucp-ip-address}:34080/sender/ .  After each screen refresh, the sender posts a message to receiver.  Receiver answers with a message back.  Other console applications are available as described in the previous section [Verifying the Application on Docker for Mac](#verifying-the-application-on-docker-for-mac)
 
     ![UCP Screen8](./images/UCPScreen8.png "Sender-Receiver from UCP")
 
-## Configuration and Deployment on Docker Enterprise Edition using Kubernetes
+## Configuration and Deployment on Docker Enterprise Edition using Kubernetes ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo")
 
 1. In a browser, access the URL for the UCP management node and login as "admin".
 
-2. Click on `Kubernetes` in the left hand bar and then on `+Create`.  This will reveal a `Create Stack` button in the upper right.   Click on this edit the kubernetes object configuration.
+2. Click on `Kubernetes` in the left hand bar and then on `+Create`.
 
     ![UCP Screen5](./images/UCPScreen5.png "UCP Screen5")
 
-3. On the`Create Kubernetes Object` screen, choose `default` in the Namespace dropdown menu.  From the `sample.docker.mq` directory, upload the file `mq-kubernetes-EE.yml`. Change the three fields {dtr-registry-address} to the actual address name of the Docker Trusted Registry.  Click `Create` to launch the deployment.
+3. On the`Create Kubernetes Object` screen, choose `default` in the Namespace dropdown menu.  From the `sample.docker.mq` directory, upload the file `mq-kubernetes-EE.yaml`. Change the three fields {dtr-registry-address} to the actual address name of the Docker Trusted Registry.  Click `Create` to launch the deployment.
 
     ![UCP Screen6](./images/UCPScreen6.png "UCP Screen6")
 
@@ -286,30 +287,36 @@ _(If using Kubernetes, proceed to [Configuration and Deployment on Docker Enterp
 
     ![UCP Screen7](./images/UCPScreen7.png "UCP Screen7")
 
-5. To verify correct functioning, connect to http://{ucp-ip-address}:34090/sender/ .  After each screen refresh, the sender will post a message to receiver.  Receiver will answer with a message back.  Other consoßle applications are available as described in the previous section [Verifying the Application on Docker for Mac](#verifying-the-application-on-docker-for-mac)
-    
-    ![UCP Screen8](./images/UCPScreen8.png "UCP Screen8")
+5. To bring up the application, click on `Load Balancers` in the Kubernetes section on the left hand bar. Choose `sender` in the list of load balancers.  A configuration bar appears on the right.  Choose the address with port 34090 to bring up the IBM Liberty web screen.  Add "/sender/"" to the URL in the browser to test the application.
+    ![UCP Screen7.5](./images/UCPScreen7.5.png "UCP Screen7.t")
 
-6. Other applications are accessable:
+After each screen refresh of http://{ucp-address}:34090/sender/, the sender posts a message to receiver.  Receiver answers with a message back.  
+    
+![UCP Screen8](./images/UCPScreen8.png "UCP Screen8")
+
+Other applications are accessable:
  - `MQ Console`: https://{ucp-ip-address}:33443/ibmmq/console/login.html  (admin/passw0rd)
  - `liberty-sender Console`: https://{ucp-ip-address}:34443/adminCenter/login.jsp (wsadmin/wsadmin) 
  - `liberty-receiver Console`: https://{ucp-ip-address}:34444/adminCenter/login.jsp (wsadmin/wsadmin) 
 
-## Stopping the Application on Enterprise Edition using Swarm
 
-1. To bring down the solution, click on `Stacks` in the left hand bar and then click on the "Name" of the stack.  A menu bar will appear on the right.  Click on `Remove` to stop and remove the containers.
+ _(If using Kubernetes, proceed to "Stopping Application on Enterprise Edition using Kubernetes")_
+
+## Stopping the Application on Enterprise Edition using Swarm ![Swarm Logo](./images/swarm.png "Swarm Logo")
+
+To stop the solution, click on `Stacks` in the left hand bar and then click on the "Name" of the stack.  A menu bar appears on the right.  Click on `Remove` to stop and remove the containers.
     
-    ![Stop Containers](./images/StopContainers.png "Stop Containers")
+![Stop Containers](./images/StopContainers.png "Stop Containers")
 
-## Stopping the Application on Enterprise Edition using Swarm
+## Stopping the Application on Enterprise Edition using Kubernetes ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo")
 
-1. To bring down the solution, remove both the `Controller` entries for `mqfull`, `sender`, and `receiver`.  Also remove `Load Balancer` entries for the same.
+To stop the solution, remove both the `Controller` entries for `mqfull`, `sender`, and `receiver`.  Also remove `Load Balancer` entries for the same.
 
-    ![Stop Controllers](./images/RemoveK8sControllers.png "Stop Controllers")
+![Stop Controllers](./images/RemoveK8sControllers.png "Stop Controllers")
 
-    ![Stop LBs](./images/RemoveK8sLBs.png "Stop LBs")
+![Stop LBs](./images/RemoveK8sLBs.png "Stop LBs")
 
-## Troubleshooting
+## Troubleshooting ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo") ![Swarm Logo](./images/swarm.png "Swarm Logo")  
 
 1. If errors occur in the build or the sender/receiver communication, it may be necessary to re-build after removing all images and clearing cashes.   This can be achieved using the following commands:
 ```bash
@@ -322,7 +329,15 @@ $ docker system prune
 
 3. Make sure that the `Nodes` listed in the `Shared Resources` tab have the correct mix of `Kubernets`, `Swarm`, or `Mixed` resources available. 
 
-4. If Docker Trusted Registry is not available, Docker Hub or another registry can be used to store the `mqfull`, `sender`, and `receiver` images.
+4. DTR certificates: In the case of a new EE installation, the docker push` does not work,  by default, with registry endpoint that has self-signed TLS certificate. You can do either of four options to overcome this:
+    1. Upload your certificates signed by trusted CA to DTR by [following the docs](https://docs.docker.com/ee/dtr/admin/configure/use-your-own-tls-certificates/)
+    This is recommended way and UCP will be able to download images from DTR.
+    2. Modify the docker engine config from where you will be uploading the image and add the DTR URL among the "insecure registries" by following steps in https://docs.docker.com/registry/insecure/. Since UCP/Swarm will be downloading images DTR these settings will
+    need to be applied to each engine on UCP. This can be done by UCP by [following the docs](https://docs.docker.com/ee/ucp/admin/configure/integrate-with-multiple-registries/).
+    3. [Trust DTR's self-signed certificate in your laptop](https://docs.docker.com/datacenter/ucp/2.2/guides/admin/configure/integrate-with-dtr/#1-configure-your-local-computer). Since UCP/swarm will be downloading images from DTR, DTR's CA certificate will need to be added to all the engines in UCP.
+    4. If Docker Trusted Registry is not available, Docker Hub or another registry can be used to push and pull the `mqfull`, `sender`, and `receiver` images.
+
+5. On UCP, if the Kubernetes pods show as "Pending", check to make sure that the {DTR-address} is entered correctly in the mq-kubernetes.yaml uploaded file.
 
 ## Further Reading
 
