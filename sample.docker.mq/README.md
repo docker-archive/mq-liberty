@@ -1,11 +1,31 @@
+---
+title: "IBM MQ and WebSphere Liberty Solution Brief for Docker EE 2.0"
+summary: "This Solution Brief illustrates how Docker stack deploy can be used to stand up a topology on Docker Enterprise Edition with IBM MQ being used to communicate between two applications running on WebSphere Liberty."
+type: solutionbrief
+ 
+author:  powersplay
+product:
+  - ee
+testedon:
+  - ee-2.0
+  - ucp-3.0.0
+  - dtr-2.5
+platform:
+  - linux
+  - mac
+tags:
+  - certified
+  - deploy
+  - installing
+  - management
+---
 # Deployment of the WebSphere Liberty and IBM MQ images in containers using Swarm and Kubernetes on Docker Enterprise Edition 2.0
 
 ## Overview
 
 This Solution Brief illustrates how Docker Enterprise Edition 2.0 can be used to deploy an IBM MQ service communicating between two applications running on separate instances of WebSphere Liberty.
 
-The two applications can be staged using the `build` script and the sample can
-then be deployed by using Docker Compose or Kubernetes.  In both cases, Docker for Mac is used to prepare and validate the initial setup before deployment on Docker Enterprise Edition 2.0.
+The two applications can be staged using the `build` script and the sample can then be deployed by using Docker Compose or Kubernetes.  In both cases, Docker for Mac is used to prepare and validate the initial setup before deployment on Docker Enterprise Edition 2.0.
 
 > Information on IBM WebSphere MQ and WebSphere Liberty is provided by Docker as a known, working configuration at the time of publishing. Docker does not support IBM WebSphere MQ or WebSphere Liberty. Please contact their approved support methods if you have any questions or problems with them.
 
@@ -49,7 +69,7 @@ This deployment shows:
 2. In a terminal window, navigate to the folder you would like to place the repository (or create a new one), then run the command:
 
     ```bash
-    $ git clone https://github.com/powersplay/mq-liberty.git
+    $ git clone https://github.com/docker/mq-liberty.git
     ```
 
 3. MQ requires a resource adaptor that allows WebSphere Liberty to connect to IBM MQ to enable it to send messages to a second web application. The appropriate resource adaptor for MQ is available through the [IBM Fix Central](https://www-945.ibm.com/support/fixcentral/swg/selectFixes?parent=ibm~WebSphere&product=ibm/WebSphere/WebSphere+MQ&release=All&platform=Linux+64-bit,zSeries&function=all "IBM Fix Central") service. To locate a version that is available for download, unblock any popups from IBM and search for the term "InstallRA" from the search box provided. The name of the file to be downloaded is in the format of `<V.R.M.F>-IBM-MQ-Java-InstallRA.jar`.
