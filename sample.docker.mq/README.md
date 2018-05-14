@@ -27,26 +27,26 @@ This Solution Brief illustrates how Docker Enterprise Edition 2.0 can be used to
 
 The two applications can be staged using the `build` script and the sample can then be deployed by using Docker Compose or Kubernetes.  In both cases, Docker for Mac is used to prepare and validate the initial setup before deployment on Docker Enterprise Edition 2.0.
 
-> Information on IBM WebSphere MQ and WebSphere Liberty is provided by Docker as a known, working configuration at the time of publishing. Docker does not support IBM WebSphere MQ or WebSphere Liberty. Please contact their approved support methods if you have any questions or problems with them.
+> Information on IBM MQ and WebSphere Liberty is provided by Docker as a known, working configuration at the time of publishing. Docker does not support IBM MQ or WebSphere Liberty. Please contact IBM Support if you have any questions or problems with them.
 
-## IBM WebSphere MQ Overview
+## IBM MQ Overview
 
-IBM WebSphere MQ (often referred to as "MQ") is IBM's Messaging solution for Enterprise and IBM's Message Oriented Middleware offering. It allows independent applications on a distributed system to securely communicate with each other. WebSphere Application Server (WAS) is a mission-critial enterprise class application server that connects Web site users with Java applications or servlets.
+IBM MQ (often referred to as "MQ") is IBM's Messaging solution for Enterprise and IBM's Message Oriented Middleware offering. It allows independent applications to securely communicate with each other across multiple different systems. WebSphere Application Server provides flexible and secure runtimes for mission-critical Java enterprise applications, lightweight web applications, and micro services. .
 
-These two products are often found in enterprise IT deployments.  MQ is used to securely pass messages and status between applications managed by WebSphere Liberty servers.
+These two products are often found in enterprise IT deployments.  MQ is used to securely communicate between applications running in WebSphere Liberty servers.
 
 ## Architecture
 
 This deployment shows:
 
-1. MQ and two Websphere Liberty servers are deployed on Docker for Mac or Docker Enterprise Edition.  A "sender" java application is deployed and managed by one Liberty server.  A "receiver" application is deployed and managed by the other.
-2. After the containers are started, the sender application creates a connection to the queue manager (QM1).  The sender application puts a message on the queue (Q1).
+1. MQ and two Websphere Liberty servers are deployed on Docker for Mac or Docker Enterprise Edition.  A "sender" Java application is deployed and managed by one Liberty server.  A "receiver" application is deployed and managed by the other.
+2. After the containers are started, the sender application creates a connection to the queue manager (QM1).  The sender application puts a message on the queue (Q1).  This is initiated through a web-browser
 3. The sender application then waits for a response from the receiver.
 4. The receiver application continuously monitors the queue for messages using a message-driven bean.
 5. The receiving application consumes the message from the queue and creates a response.
 6. The receiving application puts the response on a temporary response queue and closes the connection to the queue.
 7. The sending application then sees the message and consumes it from the queue.
-8. The sending application reports its progress back to the browser and writes the same messages out to the logs.
+8. The sending application reports its progress back to the web-browser and writes the same messages out to the logs.
 
 ### IBM Liberty-MQ-Liberty Sender/Receiver Architecture on Docker Enterprise Edition
 
@@ -58,9 +58,9 @@ This deployment shows:
 - [Docker for Mac](https://store.docker.com/editions/community/docker-ce-desktop-mac)
 - [Docker Enterprise Edition 2.0 UCP 3.0.0 DTR 2.5.0 for Ubuntu](https://store.docker.com/editions/enterprise/docker-ee-server-ubuntu)  (other platforms available)
 - [IBM WebSphere Kernel version 17.0.0.04 from Docker Hub](https://hub.docker.com/_/websphere-liberty/)
-- [IBM WebSphere MQ 9.0.3 from Docker Hub](https://hub.docker.com/r/ibmcom/mq/)
+- [IBM MQ 9.0.3 from Docker Hub](https://hub.docker.com/r/ibmcom/mq/)
 - [Create IBMid](https://www.ibm.com/account/us-en/signup/register.html)
-- [MQ Resource Adaptor](https://www-945.ibm.com/support/fixcentral/)
+- [MQ Resource Adapter](https://www-945.ibm.com/support/fixcentral/)
 - [Create Docker Store Login](https://store.docker.com/signup?next=%2F)
 
 ## Installation and Configuration (Docker for Mac) ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo") ![Swarm Logo](./images/swarm.png "Swarm Logo")
@@ -72,8 +72,8 @@ This deployment shows:
     $ git clone https://github.com/docker/mq-liberty.git
     ```
 
-3. MQ requires a resource adaptor that allows WebSphere Liberty to connect to IBM MQ to enable it to send messages to a second web application. The appropriate resource adaptor for MQ is available through the [IBM Fix Central](https://www-945.ibm.com/support/fixcentral/swg/selectFixes?parent=ibm~WebSphere&product=ibm/WebSphere/WebSphere+MQ&release=All&platform=Linux+64-bit,zSeries&function=all "IBM Fix Central") service. To locate a version that is available for download, unblock any popups from IBM and search for the term "InstallRA" from the search box provided. The name of the file to be downloaded is in the format of `<V.R.M.F>-IBM-MQ-Java-InstallRA.jar`.
-4. Click through the selection and agreement forms.   Download the most recent resource adapter.  (This Solution Brief was tested with version v9.0.5.0)
+3. MQ provides a resource adapter that allows WebSphere Liberty to connect to IBM MQ to enable it to send messages to a second web application. The MQ resource adapter is available through[IBM Fix Central](https://www-945.ibm.com/support/fixcentral/swg/selectFixes?parent=ibm~WebSphere&product=ibm/WebSphere/WebSphere+MQ&release=All&platform=Linux+64-bit,zSeries&function=all "IBM Fix Central"), or from the MQ installation. To locate a version that is available for download, unblock any popups from IBM and search for the term "InstallRA" from the search box provided. The name of the file to be downloaded is in the format of `<V.R.M.F>-IBM-MQ-Java-InstallRA.jar`.
+4. Click through the selection and agreement forms.   Download the most recent resource adapter.  (This Solution Brief was tested with version 9.0.5.0)
 5. Put the resource adapter JAR file that you downloaded into both the `liberty-sender` and `liberty-receiver` application folders found in `./sample.docker.mq`
 6. Edit the `Dockerfile` in both `liberty-sender` and `liberty-receiver` and ensure that the COPY commands for the resource adapter is up-to-date with the current resource adapter’s version (e.g. change `9.0.5.0` in two places if necessary).
 
