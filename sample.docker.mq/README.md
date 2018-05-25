@@ -216,6 +216,8 @@ To deploy the IBM MQ & WebSphere-Liberty Solution Brief on Docker Enterprise Edi
 
 Docker Trusted Registry (DTR) is also installed on the instance with one of the worker containers.  This guide assumes that UCP and DTR have been installed and configured and that access to the "admin" account and password have been provided.
 
+Note on Kubernetes networking: This guide defines all of the container ports using `NodePort` networking.  To use `LoadBalancer` method instead, refer to the Troubleshooting section towards the end of this document.
+
 ### Topology of containers and instances for MQ-Liberty Solution Guide on Docker Enterprise Edition
 
 ![EE MQ-Liberty Architecture](./images/EE-MQ-LIBERTY-ARCHITECTURE.png "EE MQ-Liberty Architecture")
@@ -358,6 +360,8 @@ $ docker system prune
     4. If Docker Trusted Registry is not available, Docker Hub or another registry can be used to push and pull the `mqfull`, `sender`, and `receiver` images.
 
 5. On UCP, if the Kubernetes pods show as "Pending", check to make sure that the {DTR-address} is entered correctly in the mq-kubernetes.yaml uploaded file.
+
+6. `LoadBalancer` service type: the example in this Solution Brief employs `NodePort` service type.  To use `LoadBalancer` networking, the file `mq-kubernetes-EE-LB.yaml` under `sample.docker.mq` directory defines all of the application and console ports using `type: LoadBalancer`.  Use this file in step 3 of the section _Configuration and Deployment on Docker Enterprise Edition using Kubernetes_ above. 
 
 ## Further Reading
 

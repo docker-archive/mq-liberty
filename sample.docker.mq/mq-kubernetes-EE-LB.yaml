@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqfull
+  labels:
+    app: mqfull
+spec:
+  ports:
+    - port: 9443
+      name: mqfull-console
+    - port: 1414
+      name: mq-internal
+  selector:
+    app: mqfull
+    tier: queue
+  type: LoadBalancer
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: mqfull
+  labels:
+    app: mqfull
+spec:
+  selector:
+    matchLabels:
+      app: mqfull
+      tier: queue
+  template: 
+    metadata:
+      labels:
+        app: mqfull
+        tier: queue
+    spec:
+      containers:
+        - name: mqfull
+          image: {dtr-registry-address}/admin/test-mq:1.0
+          ports:
+            - containerPort: 9443
+              name: mq-console
+            - containerPort: 1414
+              name: mq-internal
+          env:
+            - name: LICENSE
+              value: accept
+            - name: MQ_QMGR_NAME
+              value: QM1
+            - name: MQSNOAUT
+              value: "yes"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sender
+  labels:
+    app: sender
+spec:
+  ports:
+    - port: 9080
+      name: sender-comms
+    - port: 9443
+      name: sender-console
+  selector:
+    app: sender
+    tier: websphere
+  type: LoadBalancer
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: sender
+  labels:
+    app: sender
+spec:
+  selector:
+    matchLabels:
+      app: sender
+      tier: websphere
+  template: 
+    metadata:
+      labels:
+        app: sender
+        tier: websphere
+    spec:
+      containers:
+        - name: sender-image
+          image: {dtr-registry-address}/admin/test-sender:1.0
+          ports:
+            - containerPort: 9080
+            - containerPort: 9443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: receiver
+  labels:
+    app: receiver
+spec:
+  ports:
+    - port: 9080
+      name: receiver-comms
+    - port: 9443
+      name: receiver-console
+  selector:
+    app: receiver
+    tier: websphere
+  type: LoadBalancer
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: receiver
+  labels:
+    app: receiver
+spec:
+  selector:
+    matchLabels:
+      app: receiver
+      tier: websphere
+  template: 
+    metadata:
+      labels:
+        app: receiver
+        tier: websphere
+    spec:
+      containers:
+        - name: receiver-image
+          image: {dtr-registry-address}/admin/test-receiver:1.0
+          ports:
+            - containerPort: 9080
+            - containerPort: 9443
