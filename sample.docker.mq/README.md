@@ -61,7 +61,8 @@ This deployment shows:
 - [IBM MQ 9.0.3 from Docker Hub](https://hub.docker.com/r/ibmcom/mq/)
 - [Create IBMid](https://www.ibm.com/account/us-en/signup/register.html)
 - [MQ Resource Adapter](https://www-945.ibm.com/support/fixcentral/)
-- [Create Docker Store Login](https://store.docker.com/signup?next=%2F)
+- [Create Docker ID](https://hub.docker.com/)
+- [Subscribe to MQ and Websphere Liberty images on Docker Store](https://store.docker.com)
 
 ## Installation and Configuration (Docker for Mac) ![Kubernetes Logo](./images/kubernetes.png "Kubernetes Logo") ![Swarm Logo](./images/swarm.png "Swarm Logo")
 
@@ -76,20 +77,23 @@ This deployment shows:
 4. Click through the selection and agreement forms.   Download the most recent resource adapter.  (This Solution Brief was tested with version 9.0.5.0)
 5. Put the resource adapter JAR file that you downloaded into both the `liberty-sender` and `liberty-receiver` application folders found in `./sample.docker.mq`
 6. Edit the `Dockerfile` in both `liberty-sender` and `liberty-receiver` and ensure that the COPY commands for the resource adapter is up-to-date with the current resource adapter’s version (e.g. change `9.0.5.0` in two places if necessary).
+7. In a browser and using a previously created [Docker ID](https://hub.docker.com), log into [Docker Store](https://store.docker.com).  Subscribe to both the [Websphere Liberty](https://store.docker.com/images/websphere-liberty) and [MQ Advanced](https://store.docker.com/images/ibm-mq-advanced) images. These images are free.  Here are the example steps to subscribe to the `Websphere Liberty` image.  Follow the same process for the `MQ Advanced` image.
+![Websphere Store Page](./images/Websphere-Store-Page.png "Websphere Store Page")
+Subscription Screen:
+![Websphere Content](./images/Get_Content_Screen.png "Get Websphere Content")
 
-7. Go to Prerequistes section to create a `docker login id` if you don't already have one. Execute the following command and provide your Docker credentials:
+8. Back in the terminal window, execute the following command and provide Docker credentials:
     ```
     $ docker login
     ```
-
-8. Return to the `sample.docker.mq` directory.  Execute this script which compiles and builds the application:
+9. Return to the `sample.docker.mq` directory.  Execute this script which compiles and builds the application:
     ```bash
     $ chmod 755 build
     $ ./build
     ```
 This script uses maven to build the WAR files for both of the applications in the sender and receiver directories and makes sure they are copied the correct locations. It also builds the images for mq, sender, and receiver parts of the application:
 
-9. Verify the image creation using these Kubernetes commands:
+10. Verify the image creation using these Kubernetes commands:
 ```docker
 $ docker images | grep sampledockermq
 sampledockermq_receiver                                  latest              a4a12b72eebf        17 minutes ago      451MB
