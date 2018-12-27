@@ -1,4 +1,4 @@
-FROM store/ibmcorp/websphere-liberty:webProfile7
+FROM store/ibmcorp/websphere-liberty:webProfile8
 USER root
 
 MAINTAINER Dan Powers <dan.powers@docker.com>
